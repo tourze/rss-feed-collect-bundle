@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  # DataFixtures 仅在开发环境中使用
+  Tourze\RSSFeedCollectBundle\DataFixtures\:
+    resource: '../../DataFixtures/'
+    tags: ['doctrine.fixture.orm']

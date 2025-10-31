@@ -1,0 +1,30 @@
+services:
+  # default configuration for services in *this* file
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    public: false
+
+  # Repository services
+  Tourze\RSSFeedCollectBundle\Repository\:
+    resource: '../../Repository/'
+    tags: ['doctrine.repository_service']
+
+  # Service layer
+  Tourze\RSSFeedCollectBundle\Service\:
+    resource: '../../Service/'
+
+  # Command services
+  Tourze\RSSFeedCollectBundle\Command\:
+    resource: '../../Command/'
+    tags: ['console.command']
+
+  # Message handlers
+  Tourze\RSSFeedCollectBundle\MessageHandler\:
+    resource: '../../MessageHandler/'
+    tags: ['messenger.message_handler']
+
+  # Controllers
+  Tourze\RSSFeedCollectBundle\Controller\:
+    resource: '../../Controller/'
+    tags: ['controller.service_arguments']
