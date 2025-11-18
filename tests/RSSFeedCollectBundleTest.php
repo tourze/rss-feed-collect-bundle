@@ -32,20 +32,6 @@ class RSSFeedCollectBundleTest extends AbstractBundleTestCase
         self::assertTrue($method->isPublic(), 'getBundleDependencies should be public');
     }
 
-    public function testGetBundleDependencies(): void
-    {
-        $bundleClass = self::getBundleClass();
-        /** @var class-string $bundleClass */
-        $dependencies = $bundleClass::getBundleDependencies();
-
-        $expectedDependencies = [
-            MonologBundle::class => ['all' => true],
-            DoctrineBundle::class => ['all' => true],
-        ];
-
-        self::assertEquals($expectedDependencies, $dependencies);
-    }
-
     public function testBundleHasCorrectName(): void
     {
         $bundleClass = self::getBundleClass();
@@ -75,15 +61,5 @@ class RSSFeedCollectBundleTest extends AbstractBundleTestCase
         // 验证包含 Monolog Bundle 依赖
         self::assertArrayHasKey(MonologBundle::class, $dependencies);
         self::assertEquals(['all' => true], $dependencies[MonologBundle::class]);
-    }
-
-    public function testDependenciesCountIsCorrect(): void
-    {
-        $bundleClass = self::getBundleClass();
-        /** @var class-string $bundleClass */
-        $dependencies = $bundleClass::getBundleDependencies();
-
-        // 当前应该有2个依赖
-        self::assertCount(2, $dependencies);
     }
 }

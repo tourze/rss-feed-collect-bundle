@@ -11,11 +11,11 @@ use Tourze\RSSFeedCollectBundle\Repository\RssFeedRepository;
 /**
  * RSS Feed 核心业务服务
  */
-class RssFeedService
+readonly class RssFeedService
 {
     public function __construct(
-        private readonly RssFeedRepository $rssFeedRepository,
-        private readonly EntityManagerInterface $entityManager,
+        private RssFeedRepository $rssFeedRepository,
+        private EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -242,7 +242,6 @@ class RssFeedService
     {
         if (isset($updateData['description'])) {
             $description = $updateData['description'];
-            // @phpstan-ignore-next-line function.impossibleType
             if (!is_string($description) && !is_null($description)) {
                 throw new \InvalidArgumentException('Feed description must be a string or null');
             }
@@ -257,7 +256,6 @@ class RssFeedService
     {
         if (isset($updateData['category'])) {
             $category = $updateData['category'];
-            // @phpstan-ignore-next-line function.impossibleType
             if (!is_string($category) && !is_null($category)) {
                 throw new \InvalidArgumentException('Feed category must be a string or null');
             }

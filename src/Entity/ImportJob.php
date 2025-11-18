@@ -51,7 +51,6 @@ class ImportJob
 
     /**
      * @var array<int, string>
-     * @phpstan-ignore-next-line missingType.iterableValue
      */
     #[ORM\Column(type: Types::JSON, nullable: true, options: ['comment' => '错误信息JSON'])]
     #[Assert\All(constraints: [
