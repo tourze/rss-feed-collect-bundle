@@ -11,7 +11,7 @@ use Tourze\RSSFeedCollectBundle\Entity\ImportJob;
 use Tourze\RSSFeedCollectBundle\Entity\RssFeed;
 use Tourze\RSSFeedCollectBundle\Entity\RssItem;
 
-readonly class AdminMenu implements MenuProviderInterface
+final readonly class AdminMenu implements MenuProviderInterface
 {
     public function __construct(
         private LinkGeneratorInterface $linkGenerator,

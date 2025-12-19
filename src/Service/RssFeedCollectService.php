@@ -20,7 +20,7 @@ use Tourze\RSSFeedCollectBundle\Repository\RssItemRepository;
  * 遵循Linus "Good Taste"原则：消除边界情况，基于数据结构优先设计
  */
 #[WithMonologChannel(channel: 'rss_feed_collect')]
-class RssFeedCollectService implements RssFeedCollectServiceInterface
+final class RssFeedCollectService implements RssFeedCollectServiceInterface
 {
     private const DEFAULT_TIMEOUT = 30;
     private const DEFAULT_USER_AGENT = 'RSS Feed Collector Bot/1.0';

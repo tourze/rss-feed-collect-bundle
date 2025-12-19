@@ -22,7 +22,7 @@ use Tourze\RSSFeedCollectBundle\Service\RssFeedCollectServiceInterface;
     name: 'rss:collect-feeds',
     description: 'Collect all due RSS feeds and save items to database',
 )]
-class FeedCollectAllCommand extends Command
+final class FeedCollectAllCommand extends Command
 {
     public function __construct(
         private readonly RssFeedCollectServiceInterface $collectService,

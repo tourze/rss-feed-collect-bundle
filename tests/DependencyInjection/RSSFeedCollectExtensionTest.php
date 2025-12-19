@@ -15,7 +15,7 @@ use Tourze\SymfonyDependencyServiceLoader\AutoExtension;
  * @internal
  */
 #[CoversClass(RSSFeedCollectExtension::class)]
-class RSSFeedCollectExtensionTest extends AbstractDependencyInjectionExtensionTestCase
+final class RSSFeedCollectExtensionTest extends AbstractDependencyInjectionExtensionTestCase
 {
     public function testExtensionInstantiates(): void
     {

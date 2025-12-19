@@ -82,6 +82,7 @@ class RssItemRepositoryTest extends AbstractRepositoryTestCase
         $rssItem->setGuid('guid-' . uniqid());
         $rssItem->setRssFeed($rssFeed);
         $rssItem->setPublishTime(new \DateTimeImmutable());
+        $rssItem->setCreateTime(new \DateTimeImmutable());
 
         return $rssItem;
     }
@@ -254,6 +255,10 @@ class RssItemRepositoryTest extends AbstractRepositoryTestCase
 
     public function testRemoveOlderThan(): void
     {
+        // 清理数据确保测试环境纯净
+        self::getEntityManager()->createQuery('DELETE FROM ' . RssItem::class)->execute();
+        self::getEntityManager()->createQuery('DELETE FROM ' . RssFeed::class)->execute();
+
         $rssFeed = $this->createTestRssFeed();
 
         // 创建旧文章（2天前）

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tourze\RSSFeedCollectBundle\Message;
 
-class OpmlImportMessage
+final class OpmlImportMessage
 {
     public function __construct(
         public readonly string $filePath,

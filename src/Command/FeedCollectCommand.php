@@ -21,7 +21,7 @@ use Tourze\RSSFeedCollectBundle\Service\RssFeedCollectServiceInterface;
     name: 'rss:collect-feed',
     description: 'Collect a single RSS feed and save items to database',
 )]
-class FeedCollectCommand extends Command
+final class FeedCollectCommand extends Command
 {
     public function __construct(
         private readonly RssFeedCollectServiceInterface $collectService,

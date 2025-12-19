@@ -6,7 +6,7 @@ namespace Tourze\RSSFeedCollectBundle\DependencyInjection;
 
 use Tourze\SymfonyDependencyServiceLoader\AutoExtension;
 
-class RSSFeedCollectExtension extends AutoExtension
+final class RSSFeedCollectExtension extends AutoExtension
 {
     protected function getConfigDir(): string
     {

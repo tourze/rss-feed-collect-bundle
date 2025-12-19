@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tourze\RSSFeedCollectBundle\Tests\Service;
 
+use Knp\Menu\ItemInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tourze\EasyAdminMenuBundle\Service\LinkGeneratorInterface;
@@ -18,89 +19,141 @@ use Tourze\RSSFeedCollectBundle\Service\AdminMenu;
 #[RunTestsInSeparateProcesses]
 final class AdminMenuTest extends AbstractEasyAdminMenuTestCase
 {
+    private ItemInterface $item;
+    private ItemInterface $rssMenu;
+    private ItemInterface $childItem;
+
     protected function onSetUp(): void
     {
-        // 在AbstractEasyAdminMenuTestCase中，onSetUp是可选的
+        $this->item = $this->createMock(ItemInterface::class);
+        $this->rssMenu = $this->createMock(ItemInterface::class);
+        $this->childItem = $this->createMock(ItemInterface::class);
+
+        // 设置默认的 mock 返回值
+        $this->childItem->method('setUri')->willReturn($this->childItem);
+        $this->childItem->method('setAttribute')->willReturn($this->childItem);
     }
 
     public function testAdminMenuServiceIsRegistered(): void
     {
-        $adminMenu = self::getContainer()->get(AdminMenu::class);
+        $adminMenu = self::getService(AdminMenu::class);
         $this->assertInstanceOf(AdminMenu::class, $adminMenu);
     }
 
     public function testAdminMenuImplementsMenuProviderInterface(): void
     {
-        $adminMenu = self::getContainer()->get(AdminMenu::class);
+        $adminMenu = self::getService(AdminMenu::class);
         $this->assertInstanceOf(MenuProviderInterface::class, $adminMenu);
     }
 
-    public function testAdminMenuCreatesRssManagementMenu(): void
+    public function testInvokeMethodDoesNotThrowException(): void
     {
-        $adminMenu = self::getContainer()->get(AdminMenu::class);
-        $this->assertInstanceOf(AdminMenu::class, $adminMenu);
+        $adminMenu = self::getService(AdminMenu::class);
 
-        // 使用简化的集成测试方法，测试服务能正常工作
-        // 创建一个简单的测试存根类来验证基本功能
-        $testItem = new TestMenuItem();
+        // 配置基本的 mock 行为
+        $this->item->expects($this->exactly(2))
+            ->method('getChild')
+            ->with('RSS管理')
+            ->willReturnCallback(function ($name) {
+                static $callCount = 0;
+                $callCount++;
+                return $callCount === 1 ? null : $this->rssMenu;
+            });
 
-        // 执行测试 - 主要验证服务不会抛出异常
-        $adminMenu($testItem);
+        $this->item->expects($this->once())
+            ->method('addChild')
+            ->with('RSS管理')
+            ->willReturn($this->rssMenu);
 
-        // 验证基本行为：应该尝试添加RSS管理菜单
-        $this->assertTrue($testItem->hasAddChildBeenCalled('RSS管理'));
-        $this->assertTrue($testItem->hasGetChildBeenCalled('RSS管理'));
+        $this->rssMenu->expects($this->exactly(3))
+            ->method('addChild')
+            ->willReturn($this->childItem);
+
+        // 如果没有异常抛出，测试通过
+        $this->assertTrue(true);
+        ($adminMenu)($this->item);
     }
 
-    public function testAdminMenuHandlesExistingRssMenu(): void
+    public function testAdminMenuCreatesRssManagementMenuWhenNotExists(): void
     {
-        $adminMenu = self::getContainer()->get(AdminMenu::class);
-        $this->assertInstanceOf(AdminMenu::class, $adminMenu);
+        $adminMenu = self::getService(AdminMenu::class);
 
-        // 测试当RSS管理菜单已存在时的行为
-        $testItem = new TestMenuItem();
-        $existingRssMenu = new TestMenuItem(); // 模拟已存在的RSS菜单
-        $testItem->setChildToReturn('RSS管理', $existingRssMenu);
+        // 模拟 RSS 管理菜单不存在的情况
+        $this->item->expects($this->exactly(2))
+            ->method('getChild')
+            ->with('RSS管理')
+            ->willReturnCallback(function ($name) {
+                static $callCount = 0;
+                $callCount++;
+                return $callCount === 1 ? null : $this->rssMenu;
+            });
 
-        // 执行测试
-        $adminMenu($testItem);
+        $this->item->expects($this->once())
+            ->method('addChild')
+            ->with('RSS管理')
+            ->willReturn($this->rssMenu);
 
-        // 验证调用：应该检查菜单是否存在，但不添加新菜单
-        $this->assertTrue($testItem->hasGetChildBeenCalled('RSS管理'));
-        $this->assertFalse($testItem->hasAddChildBeenCalled('RSS管理')); // 不应该添加，因为已存在
+        $this->rssMenu->expects($this->exactly(3))
+            ->method('addChild')
+            ->willReturnCallback(function ($name) {
+                // 验证三个子菜单项都被添加
+                $this->assertContains($name, ['RSS源管理', 'RSS文章管理', '导入任务管理']);
+                return $this->childItem;
+            });
 
-        // 验证子菜单项被添加到已存在的RSS菜单
-        $this->assertTrue($existingRssMenu->hasAddChildBeenCalled('RSS源管理'));
-        $this->assertTrue($existingRssMenu->hasAddChildBeenCalled('RSS文章管理'));
-        $this->assertTrue($existingRssMenu->hasAddChildBeenCalled('导入任务管理'));
+        ($adminMenu)($this->item);
     }
 
-    public function testAdminMenuHandlesNullRssMenu(): void
+    public function testAdminMenuUsesExistingRssMenu(): void
     {
-        $adminMenu = self::getContainer()->get(AdminMenu::class);
-        $this->assertInstanceOf(AdminMenu::class, $adminMenu);
+        $adminMenu = self::getService(AdminMenu::class);
 
-        // 测试当getChild第二次调用返回null时的行为
-        $testItem = new TestMenuItem();
-        $testItem->setChildToReturn('RSS管理', null); // 模拟getChild返回null
+        // 模拟 RSS 管理菜单已存在
+        $this->item->expects($this->exactly(2))
+            ->method('getChild')
+            ->with('RSS管理')
+            ->willReturn($this->rssMenu);
 
-        // 执行测试
-        $adminMenu($testItem);
+        // 不应该添加新的 RSS 管理菜单
+        $this->item->expects($this->never())
+            ->method('addChild');
 
-        // 验证调用：应该先添加RSS管理菜单，然后尝试获取它
-        $this->assertTrue($testItem->hasAddChildBeenCalled('RSS管理'));
-        $this->assertTrue($testItem->hasGetChildBeenCalled('RSS管理'));
+        $this->rssMenu->expects($this->exactly(3))
+            ->method('addChild')
+            ->willReturnCallback(function ($name) {
+                // 验证三个子菜单项都被添加
+                $this->assertContains($name, ['RSS源管理', 'RSS文章管理', '导入任务管理']);
+                return $this->childItem;
+            });
 
-        // 由于getChild第二次调用返回null，方法应该提前返回，不进行后续操作
-        // 这验证了方法对null的处理逻辑
-        $this->assertEquals(2, $testItem->getGetChildCallCount('RSS管理'));
+        ($adminMenu)($this->item);
+    }
+
+    public function testAdminMenuHandlesNullRssMenuAfterAdd(): void
+    {
+        $adminMenu = self::getService(AdminMenu::class);
+
+        // 模拟添加菜单后 getChild 仍然返回 null 的情况
+        $this->item->expects($this->exactly(2))
+            ->method('getChild')
+            ->with('RSS管理')
+            ->willReturn(null);
+
+        $this->item->expects($this->once())
+            ->method('addChild')
+            ->with('RSS管理')
+            ->willReturn($this->rssMenu);
+
+        // 由于 getChild 第二次返回 null，不应该尝试添加子菜单
+        $this->rssMenu->expects($this->never())
+            ->method('addChild');
+
+        ($adminMenu)($this->item);
     }
 
     public function testAdminMenuServiceHasCorrectDependencies(): void
     {
-        $adminMenu = self::getContainer()->get(AdminMenu::class);
-
-        // 验证服务可以正常实例化，说明依赖注入正确
+        $adminMenu = self::getService(AdminMenu::class);
         $this->assertInstanceOf(AdminMenu::class, $adminMenu);
 
         // 通过反射验证构造函数参数类型
@@ -120,5 +173,22 @@ final class AdminMenuTest extends AbstractEasyAdminMenuTestCase
         } else {
             self::fail('Parameter type should be a named type');
         }
+    }
+
+    public function testReadOnlyServiceDesign(): void
+    {
+        // 验证服务是 readonly 的，符合不可变设计
+        $reflection = new \ReflectionClass(AdminMenu::class);
+        $this->assertTrue($reflection->isReadOnly(), 'AdminMenu service should be readonly');
+
+        // 验证构造函数参数也是 readonly
+        $constructor = $reflection->getConstructor();
+        $this->assertNotNull($constructor);
+
+        $parameters = $constructor->getParameters();
+        $this->assertCount(1, $parameters);
+
+        $linkGeneratorParam = $parameters[0];
+        $this->assertSame('linkGenerator', $linkGeneratorParam->getName());
     }
 }

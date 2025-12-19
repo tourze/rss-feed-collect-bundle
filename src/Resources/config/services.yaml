@@ -5,13 +5,15 @@ services:
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
     public: false
 
+  Tourze\RSSFeedCollectBundle\Controller\:
+    resource: '../../Controller/'
   Tourze\RSSFeedCollectBundle\Repository\:
     resource: '../../Repository/'
   Tourze\RSSFeedCollectBundle\Service\:
     resource: '../../Service/'
-  Tourze\RSSFeedCollectBundle\Command\:
-    resource: '../../Command/'
+    public: true
   Tourze\RSSFeedCollectBundle\MessageHandler\:
     resource: '../../MessageHandler/'
-  Tourze\RSSFeedCollectBundle\Controller\:
-    resource: '../../Controller/'
+    public: true
+  Tourze\RSSFeedCollectBundle\Command\:
+    resource: '../../Command/'

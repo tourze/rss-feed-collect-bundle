@@ -13,7 +13,7 @@ use Tourze\RSSFeedCollectBundle\Entity\RssFeed;
  * @extends ServiceEntityRepository<RssFeed>
  */
 #[AsRepository(entityClass: RssFeed::class)]
-class RssFeedRepository extends ServiceEntityRepository
+final class RssFeedRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

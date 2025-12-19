@@ -10,7 +10,7 @@ use Tourze\RSSFeedCollectBundle\Entity\RssFeed;
  * OPML 文件解析和生成服务
  * 支持 OPML 1.0 和 2.0 格式
  */
-class OpmlService
+final class OpmlService
 {
     private const SUPPORTED_VERSIONS = ['1.0', '1.1', '2.0'];
 

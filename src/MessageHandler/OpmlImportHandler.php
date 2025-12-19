@@ -20,7 +20,7 @@ use Tourze\RSSFeedCollectBundle\Service\RssFeedService;
  */
 #[AsMessageHandler]
 #[WithMonologChannel(channel: 'rss_feed_collect')]
-class OpmlImportHandler
+final class OpmlImportHandler
 {
     public function __construct(
         private readonly OpmlService $opmlService,

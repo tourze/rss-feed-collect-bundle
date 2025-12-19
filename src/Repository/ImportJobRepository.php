@@ -18,7 +18,7 @@ use Tourze\RSSFeedCollectBundle\Entity\ImportJob;
  * @phpstan-method ImportJob[]    findBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null, $limit = null, $offset = null)
  */
 #[AsRepository(entityClass: ImportJob::class)]
-class ImportJobRepository extends ServiceEntityRepository
+final class ImportJobRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

@@ -88,11 +88,7 @@ final class RssFeedCrudControllerTest extends AbstractEasyAdminControllerTestCas
 
     public function testRssFeedCrudControllerIndexAccess(): void
     {
-        $client = self::createClientWithDatabase();
-
-        // 创建管理员用户并登录
-        $admin = $this->createAdminUser('admin@test.com', 'admin123');
-        $this->loginAsAdmin($client, 'admin@test.com', 'admin123');
+        $client = $this->createAuthenticatedClient();
 
         // 测试EasyAdmin CRUD控制器的索引页面
         $client->request('GET', '/admin');
@@ -104,11 +100,7 @@ final class RssFeedCrudControllerTest extends AbstractEasyAdminControllerTestCas
 
     public function testRssFeedCrudControllerEntityConfiguration(): void
     {
-        $client = self::createClientWithDatabase();
-
-        // 创建管理员用户并登录
-        $admin = $this->createAdminUser('admin@test.com', 'admin123');
-        $this->loginAsAdmin($client, 'admin@test.com', 'admin123');
+        $client = $this->createAuthenticatedClient();
 
         // 由于EasyAdmin配置复杂性，测试基本的admin页面访问即可
         // 这验证了Controller能被正确加载和配置而不会引发致命错误
@@ -126,11 +118,7 @@ final class RssFeedCrudControllerTest extends AbstractEasyAdminControllerTestCas
 
     public function testRssFeedCrudControllerRoutePath(): void
     {
-        $client = self::createClientWithDatabase();
-
-        // 创建管理员用户并登录
-        $admin = $this->createAdminUser('admin@test.com', 'admin123');
-        $this->loginAsAdmin($client, 'admin@test.com', 'admin123');
+        $client = $this->createAuthenticatedClient();
 
         // 测试特定的路由路径访问
         $client->request('GET', '/admin/rss-feed-collect/rss-feed');
@@ -147,11 +135,7 @@ final class RssFeedCrudControllerTest extends AbstractEasyAdminControllerTestCas
 
     public function testRssFeedCrudControllerSearchConfiguration(): void
     {
-        $client = self::createClientWithDatabase();
-
-        // 创建管理员用户并登录
-        $admin = $this->createAdminUser('admin@test.com', 'admin123');
-        $this->loginAsAdmin($client, 'admin@test.com', 'admin123');
+        $client = $this->createAuthenticatedClient();
 
         // 测试搜索功能配置
         $searchParams = [
@@ -172,11 +156,7 @@ final class RssFeedCrudControllerTest extends AbstractEasyAdminControllerTestCas
 
     public function testRssFeedCrudControllerDetailView(): void
     {
-        $client = self::createClientWithDatabase();
-
-        // 创建管理员用户并登录
-        $admin = $this->createAdminUser('admin@test.com', 'admin123');
-        $this->loginAsAdmin($client, 'admin@test.com', 'admin123');
+        $client = $this->createAuthenticatedClient();
 
         // 测试详情页面（由于实体不存在会抛出异常，证明路由配置正确）
         $this->expectException(EntityNotFoundException::class);
@@ -186,11 +166,7 @@ final class RssFeedCrudControllerTest extends AbstractEasyAdminControllerTestCas
 
     public function testRssFeedCrudControllerEditView(): void
     {
-        $client = self::createClientWithDatabase();
-
-        // 创建管理员用户并登录
-        $admin = $this->createAdminUser('admin@test.com', 'admin123');
-        $this->loginAsAdmin($client, 'admin@test.com', 'admin123');
+        $client = $this->createAuthenticatedClient();
 
         // 测试编辑页面（由于实体不存在会抛出异常，证明路由配置正确）
         $this->expectException(EntityNotFoundException::class);

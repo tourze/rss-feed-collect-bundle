@@ -11,7 +11,7 @@ use Tourze\RSSFeedCollectBundle\Repository\RssFeedRepository;
 /**
  * RSS Feed 核心业务服务
  */
-readonly class RssFeedService
+final readonly class RssFeedService
 {
     public function __construct(
         private RssFeedRepository $rssFeedRepository,
